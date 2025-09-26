@@ -1,16 +1,29 @@
+```php
 <?php
-$logFile = "access.log";
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+
+
 $username = "admin";
 $action = "Logged In";
-
 $timestamp = date("Y-m-d H:i:s");
-$entry = $username . " – " . $timestamp . " – " . $action . PHP_EOL;
-file_put_contents($logFile, $entry, FILE_APPEND);
+$logEntry = "$username – $timestamp – $action" . PHP_EOL;
 
-$lines = file($logFile, FILE_IGNORE_NEW_LINES);
-$last5 = array_slice($lines, -5);
+file_put_contents("access.log", $logEntry, FILE_APPEND);
 
-foreach ($last5 as $line) {
-    echo htmlspecialchars($line) . "<br>";
+echo "<h2>Access Log</h2>";
+echo "<pre>";
+
+if (file_exists("access.log")) {
+    $logs = file("access.log", FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($logs as $line) {
+        echo htmlspecialchars($line) . "\n";
+    }
+} else {
+    echo "Log file not found.";
 }
 
+echo "</pre>";
+?>
+```
